@@ -1,0 +1,291 @@
+
+package club.hanfei.service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import club.hanfei.model.Character;
+import club.hanfei.repository.CharacterRepository;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.RandomUtils;
+import org.b3log.latke.Keys;
+import org.b3log.latke.ioc.Inject;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
+import org.b3log.latke.repository.CompositeFilterOperator;
+import org.b3log.latke.repository.FilterOperator;
+import org.b3log.latke.repository.PropertyFilter;
+import org.b3log.latke.repository.Query;
+import org.b3log.latke.repository.RepositoryException;
+import org.b3log.latke.service.LangPropsService;
+import org.b3log.latke.service.annotation.Service;
+import org.b3log.latke.util.CollectionUtils;
+import org.json.JSONObject;
+
+/**
+ * Character query service.
+ *
+@version 1.0.2.2, Sep 20, 2016
+ * @since 1.4.0
+ */
+@Service
+public class CharacterQueryService {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(CharacterQueryService.class);
+
+    /**
+     * Character repository.
+     */
+    @Inject
+    private CharacterRepository characterRepository;
+
+    /**
+     * Language service.
+     */
+    @Inject
+    private LangPropsService langPropsService;
+
+    /**
+     * Gets total character count.
+     *
+     * @return total character count
+     */
+    public int getTotalCharacterCount() {
+        return langPropsService.get("characters").length();
+    }
+
+    /**
+     * Gets all written character count.
+     *
+     * @return all written character count
+     */
+    public int getWrittenCharacterCount() {
+
+        try {
+            final List<JSONObject> result = characterRepository.select("select count(DISTINCT characterContent) from "
+                    + characterRepository.getName());
+            if (null == result || result.isEmpty()) {
+                return 0;
+            }
+
+            return result.get(0).optInt("count(DISTINCT characterContent)");
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Counts characters failed", e);
+
+            return 0;
+        }
+    }
+
+    /**
+     * Gets all written characters.
+     *
+     * <p>
+     * <b>Note</b>: Just for testing.
+     * </p>
+     *
+     * @return all written characters
+     */
+    public Set<JSONObject> getWrittenCharacters() {
+        try {
+            return CollectionUtils.jsonArrayToSet(characterRepository.get(new Query()).optJSONArray(Keys.RESULTS));
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Gets characters failed", e);
+
+            return Collections.emptySet();
+        }
+    }
+
+    /**
+     * Gets written character count of a user specified by the given user id.
+     *
+     * @param userId the given user id
+     * @return user written character count
+     */
+    public int getWrittenCharacterCount(final String userId) {
+        final Query query = new Query().setFilter(new PropertyFilter(
+                Character.CHARACTER_USER_ID, FilterOperator.EQUAL, userId));
+
+        try {
+            return (int) characterRepository.count(query);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Counts user written characters failed", e);
+
+            return 0;
+        }
+    }
+
+    /**
+     * Gets an unwritten character.
+     *
+     * @param userId the specified user id
+     * @return character
+     */
+    public String getUnwrittenCharacter(final String userId) {
+        final String ret = getUnwrittenCharacterRandom(userId);
+        if (StringUtils.isNotBlank(ret)) {
+            return ret;
+        }
+
+        return getUnwrittenCharacterOneByOne(userId);
+    }
+
+    /**
+     * Gets an unwritten character (strategy: One By One).
+     *
+     * @param userId the specified user id
+     * @return character
+     */
+    private String getUnwrittenCharacterOneByOne(final String userId) {
+        final String characters = langPropsService.get("characters");
+
+        int index = 0;
+        while (true) {
+            if (index > characters.length()) {
+                return null; // All done
+            }
+
+            final String ret = StringUtils.trim(characters.substring(index, index + 1));
+
+            index++;
+
+            final Query query = new Query();
+            query.setFilter(CompositeFilterOperator.and(
+                    new PropertyFilter(Character.CHARACTER_USER_ID, FilterOperator.EQUAL, userId),
+                    new PropertyFilter(Character.CHARACTER_CONTENT, FilterOperator.EQUAL, ret)
+            ));
+
+            try {
+                if (characterRepository.count(query) > 0) {
+                    continue;
+                }
+
+                return ret;
+            } catch (final RepositoryException e) {
+                LOGGER.log(Level.ERROR, "Gets an unwritten character for user [id=" + userId + "] failed", e);
+            }
+        }
+    }
+
+    /**
+     * Gets an unwritten character (strategy: Random).
+     *
+     * @param userId the specified user id
+     * @return character
+     */
+    private String getUnwrittenCharacterRandom(final String userId) {
+        final String characters = langPropsService.get("characters");
+
+        final int maxRetries = 7;
+        int retries = 0;
+
+        while (retries < maxRetries) {
+            retries++;
+
+            final int index = RandomUtils.nextInt(characters.length());
+            final String ret = StringUtils.trim(characters.substring(index, index + 1));
+
+            final Query query = new Query();
+            query.setFilter(CompositeFilterOperator.and(
+                    new PropertyFilter(Character.CHARACTER_USER_ID, FilterOperator.EQUAL, userId),
+                    new PropertyFilter(Character.CHARACTER_CONTENT, FilterOperator.EQUAL, ret)
+            ));
+
+            try {
+                if (characterRepository.count(query) > 0) {
+                    continue;
+                }
+
+                return ret;
+            } catch (final RepositoryException e) {
+                LOGGER.log(Level.ERROR, "Gets an unwritten character failed", e);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets an unwritten character.
+     *
+     * @return character
+     */
+    public String getUnwrittenCharacter() {
+        final String ret = getUnwrittenCharacterRandom();
+        if (StringUtils.isNotBlank(ret)) {
+            return ret;
+        }
+
+        return getUnwrittenCharacterOneByOne();
+    }
+
+    /**
+     * Gets an unwritten character (strategy: Random).
+     *
+     * @return character
+     */
+    private String getUnwrittenCharacterRandom() {
+        final String characters = langPropsService.get("characters");
+
+        final int maxRetries = 7;
+        int retries = 0;
+
+        while (retries < maxRetries) {
+            retries++;
+
+            final int index = RandomUtils.nextInt(characters.length());
+            final String ret = StringUtils.trim(characters.substring(index, index + 1));
+
+            final Query query = new Query().setFilter(
+                    new PropertyFilter(Character.CHARACTER_CONTENT, FilterOperator.EQUAL, ret));
+
+            try {
+                if (characterRepository.count(query) > 0) {
+                    continue;
+                }
+
+                return ret;
+            } catch (final RepositoryException e) {
+                LOGGER.log(Level.ERROR, "Gets an unwritten character failed", e);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets an unwritten character (strategy: One By One).
+     *
+     * @return character
+     */
+    private String getUnwrittenCharacterOneByOne() {
+        final String characters = langPropsService.get("characters");
+
+        int index = 0;
+        while (true) {
+            if (index > characters.length()) {
+                return null; // All done
+            }
+
+            final String ret = StringUtils.trim(characters.substring(index, index + 1));
+
+            index++;
+
+            final Query query = new Query().setFilter(
+                    new PropertyFilter(Character.CHARACTER_CONTENT, FilterOperator.EQUAL, ret));
+
+            try {
+                if (characterRepository.count(query) > 0) {
+                    continue;
+                }
+
+                return ret;
+            } catch (final RepositoryException e) {
+                LOGGER.log(Level.ERROR, "Gets an unwritten character failed", e);
+            }
+        }
+    }
+}

@@ -23,7 +23,7 @@
     Version: 1.0.0.0, Jan 31, 2017
     Author: Liang Ding
 -->
-<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
     <ShortName>HacPai</ShortName>
     <Description>黑客与画家的社区</Description>
     <InputEncoding>UTF-8</InputEncoding>

@@ -1,8 +1,7 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.toMarkdown = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*
  * to-markdown - an HTML to Markdown converter
- *
- * Copyright 2011+, Dom Christie
+Copyright 2011+, Dom Christie
  * Licenced under the MIT licence
  *
  */
@@ -633,8 +632,7 @@ require('block-elements').forEach(function (name) {
 
 /**
  * isBlockElem(node) determines if the given node is a block element.
- *
- * @param {Node} node
+@param {Node} node
  * @return {Boolean}
  */
 function isBlockElem(node) {
@@ -643,8 +641,7 @@ function isBlockElem(node) {
 
 /**
  * isVoid(node) determines if the given node is a void element.
- *
- * @param {Node} node
+@param {Node} node
  * @return {Boolean}
  */
 function isVoid(node) {
@@ -657,8 +654,7 @@ function isVoid(node) {
  * to determine whether or not an element is a block element; if none
  * is provided, defaults to using the list of block elements provided
  * by the `block-elements` module.
- *
- * @param {Node} elem
+@param {Node} elem
  * @param {Function} blockTest
  */
 function collapseWhitespace(elem, isBlock) {
@@ -729,8 +725,7 @@ function collapseWhitespace(elem, isBlock) {
 /**
  * remove(node) removes the given node from the DOM and returns the
  * next node in the sequence.
- *
- * @param {Node} node
+@param {Node} node
  * @return {Node} node
  */
 function remove(node) {
@@ -744,8 +739,7 @@ function remove(node) {
 /**
  * next(prev, current) returns the next node in the sequence, given the
  * current and previous nodes.
- *
- * @param {Node} prev
+@param {Node} prev
  * @param {Node} current
  * @return {Node}
  */

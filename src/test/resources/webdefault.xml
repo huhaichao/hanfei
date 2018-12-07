@@ -73,58 +73,44 @@
   <!--  
  *  acceptRanges      If true, range requests and responses are
  *                    supported
- *
- *  dirAllowed        If true, directory listings are returned if no
+ dirAllowed        If true, directory listings are returned if no
  *                    welcome file is found. Else 403 Forbidden.
- *
- *  welcomeServlets   If true, attempt to dispatch to welcome files
+ welcomeServlets   If true, attempt to dispatch to welcome files
  *                    that are servlets, but only after no matching static
  *                    resources could be found. If false, then a welcome
  *                    file must exist on disk. If "exact", then exact
  *                    servlet matches are supported without an existing file.
  *                    Default is true.
- *
- *                    This must be false if you want directory listings,
+                   This must be false if you want directory listings,
  *                    but have index.jsp in your welcome file list.
- *
- *  redirectWelcome   If true, welcome files are redirected rather than
+ redirectWelcome   If true, welcome files are redirected rather than
  *                    forwarded to.
- *
- *  gzip              If set to true, then static content will be served as
+ gzip              If set to true, then static content will be served as
  *                    gzip content encoded if a matching resource is
  *                    found ending with ".gz"
- *
- *  resourceBase      Set to replace the context resource base
- *
- *  resourceCache     If set, this is a context attribute name, which the servlet
+ resourceBase      Set to replace the context resource base
+ resourceCache     If set, this is a context attribute name, which the servlet
  *                    will use to look for a shared ResourceCache instance.
- *
- *  relativeResourceBase
+ relativeResourceBase
  *                    Set with a pathname relative to the base of the
  *                    servlet context root. Useful for only serving static content out
  *                    of only specific subdirectories.
- *
- *  pathInfoOnly      If true, only the path info will be applied to the resourceBase
- *
- *  stylesheet        Set with the location of an optional stylesheet that will be used
+ pathInfoOnly      If true, only the path info will be applied to the resourceBase
+ stylesheet        Set with the location of an optional stylesheet that will be used
  *                    to decorate the directory listing html.
- *
- *  aliases           If True, aliases of resources are allowed (eg. symbolic
+ aliases           If True, aliases of resources are allowed (eg. symbolic
  *                    links and caps variations). May bypass security constraints.
  *                    
  *  etags             If True, weak etags will be generated and handled.
- *
- *  maxCacheSize      The maximum total size of the cache or 0 for no cache.
+ maxCacheSize      The maximum total size of the cache or 0 for no cache.
  *  maxCachedFileSize The maximum size of a file to cache
  *  maxCachedFiles    The maximum number of files to cache
- *
- *  useFileMappedBuffer
+ useFileMappedBuffer
  *                    If set to true, it will use mapped file buffers to serve static content
  *                    when using an NIO connector. Setting this value to false means that
  *                    a direct buffer will be used instead of a mapped file buffer.
  *                    This file sets the value to true.
- *
- *  cacheControl      If set, all static content will have this value set as the cache-control
+ cacheControl      If set, all static content will have this value set as the cache-control
  *                    header.
  *
  -->

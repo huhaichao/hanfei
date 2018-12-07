@@ -1,0 +1,202 @@
+
+package club.hanfei.processor.advice.validate;
+
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import club.hanfei.model.Article;
+import club.hanfei.model.Common;
+import club.hanfei.model.Role;
+import club.hanfei.model.Tag;
+import club.hanfei.service.OptionQueryService;
+import club.hanfei.service.TagQueryService;
+import club.hanfei.util.StatusCodes;
+import club.hanfei.util.Hanfei;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Keys;
+import org.b3log.latke.ioc.BeanManager;
+import org.b3log.latke.ioc.Singleton;
+import org.b3log.latke.model.User;
+import org.b3log.latke.service.LangPropsService;
+import org.b3log.latke.servlet.RequestContext;
+import org.b3log.latke.servlet.advice.ProcessAdvice;
+import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
+import org.json.JSONObject;
+
+/**
+ * Validates for article adding locally.
+ *
+@version 1.3.5.3, Nov 25, 2018
+ * @since 0.2.0
+ */
+@Singleton
+public class ArticleAddValidation extends ProcessAdvice {
+
+    /**
+     * Max article title length.
+     */
+    public static final int MAX_ARTICLE_TITLE_LENGTH = 255;
+
+    /**
+     * Max article content length.
+     */
+    public static final int MAX_ARTICLE_CONTENT_LENGTH = 102400;
+
+    /**
+     * Min article content length.
+     */
+    public static final int MIN_ARTICLE_CONTENT_LENGTH = 4;
+
+    /**
+     * Max article reward content length.
+     */
+    public static final int MAX_ARTICLE_REWARD_CONTENT_LENGTH = 102400;
+
+    /**
+     * Min article reward content length.
+     */
+    public static final int MIN_ARTICLE_REWARD_CONTENT_LENGTH = 4;
+
+    /**
+     * Validates article fields.
+     *
+     * @param request           the specified HTTP servlet request
+     * @param requestJSONObject the specified request object
+     * @throws RequestProcessAdviceException if validate failed
+     */
+    public static void validateArticleFields(final HttpServletRequest request,
+                                             final JSONObject requestJSONObject) throws RequestProcessAdviceException {
+        final BeanManager beanManager = BeanManager.getInstance();
+        final LangPropsService langPropsService = beanManager.getReference(LangPropsService.class);
+        final TagQueryService tagQueryService = beanManager.getReference(TagQueryService.class);
+        final OptionQueryService optionQueryService = beanManager.getReference(OptionQueryService.class);
+
+        final JSONObject exception = new JSONObject();
+        exception.put(Keys.STATUS_CODE, StatusCodes.ERR);
+
+        String articleTitle = requestJSONObject.optString(Article.ARTICLE_TITLE);
+        articleTitle = StringUtils.trim(articleTitle);
+        if (StringUtils.isBlank(articleTitle) || articleTitle.length() > MAX_ARTICLE_TITLE_LENGTH) {
+            throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("articleTitleErrorLabel")));
+        }
+        if (optionQueryService.containReservedWord(articleTitle)) {
+            throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("contentContainReservedWordLabel")));
+        }
+
+        requestJSONObject.put(Article.ARTICLE_TITLE, articleTitle);
+
+        final int articleType = requestJSONObject.optInt(Article.ARTICLE_TYPE);
+        if (Article.isInvalidArticleType(articleType)) {
+            throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("articleTypeErrorLabel")));
+        }
+
+        String articleTags = requestJSONObject.optString(Article.ARTICLE_TAGS);
+        articleTags = Tag.formatTags(articleTags);
+
+        if (StringUtils.isBlank(articleTags)) {
+            // 发帖时标签改为非必填 https://github.com/b3log/symphony/issues/811
+            articleTags = "待分类";
+        }
+
+        if (StringUtils.isBlank(articleTags)) {
+            throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("tagsEmptyErrorLabel")));
+        }
+
+        if (optionQueryService.containReservedWord(articleTags)) {
+            throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("contentContainReservedWordLabel")));
+        }
+
+        if (StringUtils.isNotBlank(articleTags)) {
+            String[] tagTitles = articleTags.split(",");
+
+            tagTitles = new LinkedHashSet<>(Arrays.asList(tagTitles)).toArray(new String[0]);
+            final List<String> invalidTags = tagQueryService.getInvalidTags();
+
+            final StringBuilder tagBuilder = new StringBuilder();
+            for (int i = 0; i < tagTitles.length; i++) {
+                final String tagTitle = tagTitles[i].trim();
+
+                if (StringUtils.isBlank(tagTitle)) {
+                    throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("tagsErrorLabel")));
+                }
+
+                if (!Tag.containsWhiteListTags(tagTitle)) {
+                    if (!Tag.TAG_TITLE_PATTERN.matcher(tagTitle).matches()) {
+                        throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("tagsErrorLabel")));
+                    }
+
+                    if (tagTitle.length() > Tag.MAX_TAG_TITLE_LENGTH) {
+                        throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("tagsErrorLabel")));
+                    }
+                }
+
+                final JSONObject currentUser = (JSONObject) request.getAttribute(Common.CURRENT_USER);
+                if (!Role.ROLE_ID_C_ADMIN.equals(currentUser.optString(User.USER_ROLE))
+                        && ArrayUtils.contains(Hanfei.RESERVED_TAGS, tagTitle)) {
+                    throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("articleTagReservedLabel")
+                            + " [" + tagTitle + "]"));
+                }
+
+                if (invalidTags.contains(tagTitle)) {
+                    continue;
+                }
+
+                tagBuilder.append(tagTitle).append(",");
+            }
+            if (tagBuilder.length() > 0) {
+                tagBuilder.deleteCharAt(tagBuilder.length() - 1);
+            }
+            requestJSONObject.put(Article.ARTICLE_TAGS, tagBuilder.toString());
+        }
+
+        String articleContent = requestJSONObject.optString(Article.ARTICLE_CONTENT);
+        articleContent = StringUtils.trim(articleContent);
+        if (StringUtils.isBlank(articleContent) || articleContent.length() > MAX_ARTICLE_CONTENT_LENGTH
+                || articleContent.length() < MIN_ARTICLE_CONTENT_LENGTH) {
+            String msg = langPropsService.get("articleContentErrorLabel");
+            msg = msg.replace("{maxArticleContentLength}", String.valueOf(MAX_ARTICLE_CONTENT_LENGTH));
+
+            throw new RequestProcessAdviceException(exception.put(Keys.MSG, msg));
+        }
+
+        if (optionQueryService.containReservedWord(articleContent)) {
+            throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("contentContainReservedWordLabel")));
+        }
+
+        final int rewardPoint = requestJSONObject.optInt(Article.ARTICLE_REWARD_POINT, 0);
+        if (rewardPoint < 0) {
+            throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("invalidRewardPointLabel")));
+        }
+
+        final int articleQnAOfferPoint = requestJSONObject.optInt(Article.ARTICLE_QNA_OFFER_POINT, 0);
+        if (articleQnAOfferPoint < 0) {
+            throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("invalidQnAOfferPointLabel")));
+        }
+
+        final String articleRewardContnt = requestJSONObject.optString(Article.ARTICLE_REWARD_CONTENT);
+        if (StringUtils.isNotBlank(articleRewardContnt) && 1 > rewardPoint) {
+            throw new RequestProcessAdviceException(exception.put(Keys.MSG, langPropsService.get("invalidRewardPointLabel")));
+        }
+
+        if (rewardPoint > 0) {
+            if (StringUtils.isBlank(articleRewardContnt) || articleRewardContnt.length() > MAX_ARTICLE_CONTENT_LENGTH
+                    || articleRewardContnt.length() < MIN_ARTICLE_CONTENT_LENGTH) {
+                String msg = langPropsService.get("articleRewardContentErrorLabel");
+                msg = msg.replace("{maxArticleRewardContentLength}", String.valueOf(MAX_ARTICLE_REWARD_CONTENT_LENGTH));
+
+                throw new RequestProcessAdviceException(exception.put(Keys.MSG, msg));
+            }
+        }
+    }
+
+    @Override
+    public void doAdvice(final RequestContext context) throws RequestProcessAdviceException {
+        final HttpServletRequest request = context.getRequest();
+        final JSONObject requestJSONObject = context.requestJSON();
+        validateArticleFields(request, requestJSONObject);
+    }
+}

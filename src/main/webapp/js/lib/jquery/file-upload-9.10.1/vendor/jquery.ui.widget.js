@@ -22,12 +22,10 @@
 /*!
  * jQuery UI Widget 1.11.1
  * http://jqueryui.com
- *
- * Copyright 2014 jQuery Foundation and other contributors
+Copyright 2014 jQuery Foundation and other contributors
  * Released under the MIT license.
  * http://jquery.org/license
- *
- * http://api.jqueryui.com/jQuery.widget/
+http://api.jqueryui.com/jQuery.widget/
  */
 
 

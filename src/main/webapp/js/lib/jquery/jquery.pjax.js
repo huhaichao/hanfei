@@ -1,7 +1,6 @@
 /*!
  * pjax(ajax + history.pushState) for jquery
- *
- * by welefen
+by welefen
  */
 (function($) {
 	var Util = {

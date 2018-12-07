@@ -1,0 +1,41 @@
+
+package club.hanfei.model;
+
+/**
+ * This class defines all skin model relevant keys.
+ *
+@version 1.0.0.1, Aug 22, 2010
+ */
+public final class Skin {
+
+    /**
+     * Skin.
+     */
+    public static final String SKIN = "skin";
+
+    /**
+     * Skins.
+     */
+    public static final String SKINS = "skins";
+
+    /**
+     * Key of skin name, current selected skin name.
+     */
+    public static final String SKIN_NAME = "skinName";
+
+    /**
+     * Key of skin names.
+     */
+    public static final String SKIN_NAMES = "skinNames";
+
+    /**
+     * Key of skin directory name.
+     */
+    public static final String SKIN_DIR_NAME = "skinDirName";
+
+    /**
+     * Private constructor.
+     */
+    private Skin() {
+    }
+}
