@@ -10,14 +10,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b3log</groupId>
-    <artifactId>symphony</artifactId>
+    <artifactId>hanfei</artifactId>
     <packaging>war</packaging>
     <version>3.4.4</version>
-    <name>Symphony</name>
-    <url>https://sym.b3log.org</url>
+    <name>hanfei</name>
     <description>
-        一款用 Java 实现的现代化社区（论坛/BBS/社交网络/博客）平台。
-        A modern community (forum/BBS/SNS/blog) platform written in Java.
+      bitdao 社区
     </description>
     <inceptionYear>2012</inceptionYear>
 
@@ -51,82 +49,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <organization>
-        <name>B3log</name>
-        <url>https://b3log.org</url>
-    </organization>
-
     <licenses>
         <license>
             <name>GNU Affero General Public License, Version 3</name>
             <url>https://www.gnu.org/licenses/agpl-3.0.txt</url>
         </license>
     </licenses>
-
-    <developers>
-        <developer>
-            <id>d@b3log.org</id>
-            <name>Liang Ding</name>
-            <email>d@b3log.org</email>
-            <url>http://88250.b3log.org</url>
-            <roles>
-                <role>Lead</role>
-                <role>Initial Committer</role>
-            </roles>
-            <organization>B3log</organization>
-            <organizationUrl>https://b3log.org</organizationUrl>
-            <timezone>+8</timezone>
-        </developer>
-
-        <developer>
-            <id>v@b3log.org</id>
-            <name>Liyuan Li</name>
-            <email>v@b3log.org</email>
-            <url>http://vanessa.b3log.org</url>
-            <roles>
-                <role>Committer</role>
-            </roles>
-            <organization>B3log</organization>
-            <organizationUrl>https://b3log.org</organizationUrl>
-            <timezone>+8</timezone>
-        </developer>
-
-        <developer>
-            <id>wmainlove@gmail.com</id>
-            <name>Liceng Yao</name>
-            <email>wmainlove@gmail.com</email>
-            <url>http://love.b3log.org</url>
-            <roles>
-                <role>Committer</role>
-            </roles>
-            <organization>B3log</organization>
-            <organizationUrl>https://b3log.org</organizationUrl>
-            <timezone>+8</timezone>
-        </developer>
-
-        <developer>
-            <id>O2895205695@gmail.com</id>
-            <name>Zephyr Cheung</name>
-            <email>O2895205695@gmail.com</email>
-            <url>http://zephyr.b3log.org</url>
-            <roles>
-                <role>Committer</role>
-            </roles>
-            <organization>B3log</organization>
-            <organizationUrl>https://b3log.org</organizationUrl>
-            <timezone>+8</timezone>
-        </developer>
-
-    </developers>
-
-    <issueManagement>
-        <system>GitHub Issues</system>
-        <url>https://github.com/b3log/symphony/issues</url>
-    </issueManagement>
-
-    <scm>
-        <url>https://github.com/b3log/symphony</url>
-    </scm>
 
     <dependencies>
         <dependency>
@@ -405,7 +333,7 @@
 
         </plugins>
 
-        <finalName>symphony</finalName>
+        <finalName>hanfei</finalName>
     </build>
 
     <profiles>
