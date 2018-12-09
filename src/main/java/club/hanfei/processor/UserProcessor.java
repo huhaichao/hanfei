@@ -74,7 +74,6 @@ import org.json.JSONObject;
  * <li>Lists emotions (/users/emotions), GET</li>
  * </ul>
  *
-
  *
  * @version 1.27.0.7, Nov 28, 2018
  * @since 0.2.0

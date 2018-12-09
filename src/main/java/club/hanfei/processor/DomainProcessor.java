@@ -37,16 +37,6 @@ import org.b3log.latke.servlet.renderer.AbstractFreeMarkerRenderer;
 import org.b3log.latke.util.Paginator;
 import org.json.JSONObject;
 
-/**
- * Domain processor.
- * <ul>
- * <li>Shows domains (/domains), GET</li>
- * <li>Shows domain article (/domain/{domainURI}), GET</li>
- * </ul>
- *
-@version 1.1.0.11, Apr 6, 2018
- * @since 1.4.0
- */
 @RequestProcessor
 public class DomainProcessor {
 

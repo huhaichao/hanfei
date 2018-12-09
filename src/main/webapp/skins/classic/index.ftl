@@ -72,7 +72,7 @@
             <div class="index__bottom">
                 <div class="wrapper">
                     <div class="fn-flex-1">
-                        <div class="metro-line fn-flex">
+                       <#-- <div class="metro-line fn-flex">
                             <div class="metro-item">
                                 <a class="preview" href="${servePath}/tag/${tag0.tagURI}">
                                     <img src="${staticServePath}/images/tags/${tag0.tagIconPath}" alt="${tag0.tagTitle}">
@@ -103,8 +103,8 @@
                                     <b>${tag4.tagTitle}</b>
                                 </a>
                             </div>
-                        </div>
-                        <div class="metro-line fn-flex">
+                        </div>-->
+                       <#-- <div class="metro-line fn-flex">
                             <div class="metro-item">
                                 <a class="preview" href="${servePath}/tag/${tag5.tagURI}">
                                     <img src="${staticServePath}/images/tags/${tag5.tagIconPath}" alt="${tag5.tagTitle}">
@@ -180,7 +180,7 @@
                                 </a>
                             </#if>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div class="metro-border fn-flex">
                             <div></div>

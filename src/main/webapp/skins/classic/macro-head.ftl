@@ -6,13 +6,13 @@
 <title>${title}</title>
 <#nested>
 <link rel="preconnect" href="${staticServePath}">
-<meta name="copyright" content="B3log" />
+<meta name="copyright" content="Bitdao" />
 <meta http-equiv="Window-target" content="_top" />
 <link rel="stylesheet" href="${staticServePath}/css/responsive.css?${staticResourceVersion}" />
 <link rel="stylesheet" href="${staticServePath}/css/base.css?${staticResourceVersion}" />
-<link rel="icon" type="image/png" href="${staticServePath}/images/favicon.png" />
-<link rel="apple-touch-icon" href="${staticServePath}/images/faviconH.png">
-<link rel="search" type="application/opensearchdescription+xml" title="HacPai" href="/opensearch.xml">
+<link rel="icon" type="image/jpg" href="${staticServePath}/images/sa.jpg" />
+<link rel="apple-touch-icon" href="${staticServePath}/images/sa.jpg">
+<link rel="search" type="application/opensearchdescription+xml" title="Bitdao" href="/opensearch.xml">
 <#if !isAdminLoggedIn>
 ${siteVisitStatCode}
 </#if>

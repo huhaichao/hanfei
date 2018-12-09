@@ -515,7 +515,7 @@ public class IndexProcessor {
     @After(StopwatchEndAdvice.class)
     public void showAbout(final RequestContext context) throws Exception {
         context.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-        context.setHeader("Location", "https://hacpai.com/article/1440573175609");
+        context.setHeader("Location", "http://localhost:8080");
         final HttpServletResponse response = context.getResponse();
         response.flushBuffer();
     }

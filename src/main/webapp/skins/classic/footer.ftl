@@ -1,7 +1,7 @@
 
 <div class="footer">
     <div class="wrapper">
-        <div class="slogan">
+       <#-- <div class="slogan">
         ${indexIntroLabel} &nbsp; &nbsp;
             <a href="https://github.com/b3log/symphony" target="_blank" class="tooltipped tooltipped-n"
                aria-label="${siteCodeLabel}">
@@ -21,28 +21,30 @@
                     <use xlink:href="#icon-telegram"></use>
                 </svg>
             </a>
-        </div>
+        </div>-->
         <div class="fn-flex-1">
             <div class="footer-nav fn-clear">
                 <a rel="help" href="${servePath}/about">${aboutLabel}</a>
+<#--
                 <a href="https://hacpai.com/article/1457158841475">API</a>
+-->
                 <a href="${servePath}/tag/announcement">${symAnnouncementLabel}</a>
                 <a href="${servePath}/domains">${domainLabel}</a>
                 <a href="${servePath}/tags">${tagLabel}</a>
                 <a href="${servePath}/statistic">${dataStatLabel}</a>
-                <div class="fn-right">
+                <#--<div class="fn-right">
                     <a rel="copyright" href="https://hacpai.com" target="_blank">hacpai.com</a>
                 ${visionLabel}
-                </div>
+                </div>-->
             </div>
             <div class="fn-clear ft-smaller">
             ${sloganLabel}
                 <div class="fn-right">
                     <#if footerBeiAnHao != ''>
-                        <a href="http://www.miitbeian.gov.cn/" target="_blank">${footerBeiAnHao}</a> •
+                        <a href="https://bitdao.com" target="_blank">${footerBeiAnHao}</a> •
                     </#if>
-                    © ${year} <a href="https://b3log.org" target="_blank">B3log 开源</a>旗下云南链滴科技有限公司版权所有 •
-                    <a href="https://sym.b3log.org" target="_blank">Sym</a>
+                    © ${year} <a href="https://bitdao.com" target="_blank">bitdao</a> •
+                    <a href="https://bitdao.com" target="_blank">币道</a>
                 ${version} • ${elapsed?c}ms
                 </div>
             </div>

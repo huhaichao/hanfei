@@ -3,6 +3,6 @@
     <ShortName>bitdao</ShortName>
     <Description>币道社区</Description>
     <InputEncoding>UTF-8</InputEncoding>
-    <Image width="16" height="16" type="image/x-icon">https://static.hacpai.com/images/faviconH.png</Image>
+    <Image width="16" height="16" type="image/x-icon" src="${staticServePath}/images/sa.jpg"></Image>
     <Url type="text/html" method="get" template="https://hacpai.com/search?key={searchTerms}"></Url>
 </OpenSearchDescription>

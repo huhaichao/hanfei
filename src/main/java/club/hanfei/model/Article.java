@@ -426,12 +426,10 @@ public final class Article {
     public static final int ARTICLE_TYPE_C_CITY_BROADCAST = 2;
 
     /**
-     * Article type - <a href="https://hacpai.com/article/1441942422856">thought</a>.
      */
     public static final int ARTICLE_TYPE_C_THOUGHT = 3;
 
     /**
-     * Article type - <a href="https://github.com/b3log/symphony/issues/486">QnA</a>.
      */
     public static final int ARTICLE_TYPE_C_QNA = 5;
 
